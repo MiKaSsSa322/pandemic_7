@@ -262,17 +262,34 @@ public final class ClientEffects {
     private static void footstepsBehind(LocalPlayer p, Level lvl) {
         Vec3 look = p.getLookAngle();
         double lx = look.x, lz = look.z;
+        
         double len = Math.sqrt(lx * lx + lz * lz);
         if (len < 0.01) return;
+
         lx /= len;
         lz /= len;
+
+        final double dirX = lx;
+        final double dirZ = lz;
+
         BlockState bs = lvl.getBlockState(p.blockPosition().below());
         SoundEvent step = bs.getSoundType().getStepSound();
+
         for (int i = 0; i < 6; i++) {
             final double d = 7 - i;
-            later(8 * i, () -> lvl.playLocalSound(p.getX() - lx * d, p.getY(), p.getZ() - lz * d, step,
-                    SoundSource.PLAYERS, 0.8f, 0.9f, false));
+
+            later(8 * i, () -> lvl.playLocalSound(
+                p.getX() - dirX * d,
+                p.getY(),
+                p.getZ() - dirZ * d,
+                step,
+                SoundSource.PLAYERS,
+                0.8f,
+                0.9f,
+                false
+            ));
         }
+
     }
 
     private static void startSilhouette(LocalPlayer p, boolean moving) {
